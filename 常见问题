@@ -1,0 +1,28 @@
+1、打开浏览器后闪退，没有报错
+class Web:
+    def __init__(self, url):
+        self.url = url
+
+    def access(self):
+        driver = webdriver.Chrome()
+        driver.get(self.url)
+
+Web_SACU = Web('https://192.168.8.10')
+Web_SACU.access()
+原因：浏览器不是全局变量，可能是局部变量代码结束后被清除
+修改后：
+# 让 selenium 启动谷歌浏览器
+from selenium import webdriver
+
+
+class Web:
+    def __init__(self, url):
+        self.url = url
+        self.driver = webdriver.Chrome()
+
+    def access(self):
+        self.driver.get(self.url)
+
+
+Web_SACU = Web('https://192.168.8.10')
+Web_SACU.access()
