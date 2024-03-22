@@ -56,3 +56,10 @@ Web_SACU.access()
         self.driver.find_element(By.ID, 'maintenance4').click()
         self.driver.switch_to.parent_frame()
 
+6、显式等待
+当作为某种操作后可能需要等待弹窗或加载，这是需要等待
+隐式等待：driver.implicitly_wait(20)  //这种方法适用于等待整个页面加载成功，仅需作为全局变量调用一次。但有时不需要等待全局页面加载成功
+显式等待：
+self.wait = WebDriverWait(self.driver, 5, 0.5)
+self.wait.until(lambda selectfile: self.driver.find_element(By.ID, 'check_inv_selectFile')).click()
+等待某个操作成功再进行下一步
