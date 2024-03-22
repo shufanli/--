@@ -9,11 +9,10 @@ class Web:
 
 Web_SACU = Web('https://192.168.8.10')
 Web_SACU.access()
-原因：浏览器不是全局变量，可能是局部变量代码结束后被清除
+原因1：浏览器不是全局变量，可能是局部变量代码结束后被清除
 修改后：
 # 让 selenium 启动谷歌浏览器
 from selenium import webdriver
-
 
 class Web:
     def __init__(self, url):
@@ -23,6 +22,37 @@ class Web:
     def access(self):
         self.driver.get(self.url)
 
-
 Web_SACU = Web('https://192.168.8.10')
 Web_SACU.access()
+原因2：可能浏览器版本和chromedriver版本不兼容
+
+2、打开浏览器最后需要quit()关掉，否则占用电脑内存
+    def quit(self):
+        self.driver.quit()
+
+3、定位元素
+定位元素用find_element(By._ ，)，不要用find_element_by_,现在已经淘汰
+
+4、出现错误但不报错，收集现场的方法：
+    try:
+        Web_sacu.access()
+        Web_sacu.login()
+        Web_sacu.log_output()
+        time.sleep(60)
+    except Exception as err:
+        print(err)
+    finally:
+        Web_sacu.quit()
+
+5、元素定位不到
+元素定位不到大概率是没有找到正确的frame，初次进入网页selenium会默认进入主文本。要定位某个元素先网上翻他的层级，确认是在哪个frame，用driver.switch_to.frame()跳转到对应的frame
+    def device_log(self):
+        self.driver.switch_to.default_content()
+        self.driver.switch_to.frame('frame_content')
+        self.driver.switch_to.frame('header')
+        self.driver.find_element(By.XPATH, '/html/body/div[1]/div[2]/div/div[2]/ul/li[7]/a/span').click()
+        self.driver.switch_to.parent_frame()
+        self.driver.switch_to.frame('tree')
+        self.driver.find_element(By.ID, 'maintenance4').click()
+        self.driver.switch_to.parent_frame()
+
